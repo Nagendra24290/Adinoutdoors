@@ -1,0 +1,46 @@
+<!-- advertisement_list.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Advertisements</title>
+    <style>
+        .card {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px;
+            width: 250px;
+            text-align: center;
+            display: inline-block;
+        }
+        .card img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #f44336;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Available Advertisements</h1>
+    <div>
+        {% for ad in ads %}
+            <div class="card">
+                <img src="{{ ad.image.url }}" alt="Ad Image">
+                <h2>{{ ad.title }}</h2>
+                <p>Size: {{ ad.size }}</p>
+                <p>Direction: {{ ad.direction }}</p>
+                <p>Cost: ₹{{ ad.cost }}</p>
+                <a href="#" class="button">Book Now</a>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>

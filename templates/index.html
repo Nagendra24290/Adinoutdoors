@@ -1,0 +1,198 @@
+{% load static %}
+{% csrf_token %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Styled Sidebar</title>
+  <link rel="stylesheet" href="{% static 'styles.css' %}">
+  <script src="https://kit.fontawesome.com/7ea2fe96cb.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/c57718fbc03245b6b102ba191d71656b2fa2e04d50fe0781dacc51314a2cf142?placeholderIfAbsent=true&apiKey=2711ee6c9ebd414ab658e5005f42285a" 
+         alt="Logo" 
+         class="logo" />
+    <nav class="nav-container">
+      <div class="nav-items">
+        <img src="https://cdn.builder.io/api/v1/image/assets/TEMP/5604cae87606a675a9a5ffaacb5558aa6d82d8a90c8a377c39adf9dc2efea42b?placeholderIfAbsent=true&apiKey=2711ee6c9ebd414ab658e5005f42285a" 
+             alt="Menu" 
+             class="menu-icon" />
+        <a href="#" class="contact-us">Contact us</a>
+        <div class="book-site-btn">
+          <span class="book-site-text">Book a site</span>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <div class="main-container">
+    <!-- Sidebar -->
+    <aside class="styled-sidebar">
+      <div class="sidebar-section">
+        <h3>Outdoor Medium</h3>
+        <ul>
+          <li><input type="checkbox" id="bus-shelter"><label for="bus-shelter"> Bus shelter</label></li>
+          <li><input type="checkbox" id="gantry"><label for="gantry"> Gantry</label></li>
+          <li><input type="checkbox" id="hoarding"><label for="hoarding"> Hoarding</label></li>
+          <li><input type="checkbox" id="pole-kiosk"><label for="pole-kiosk"> Pole Kiosk</label></li>
+          <li><input type="checkbox" id="police-booth"><label for="police-booth"> Police Booth</label></li>
+          <li><input type="checkbox" id="signal-post"><label for="signal-post"> Signal Post</label></li>
+          <li><input type="checkbox" id="unipole"><label for="unipole"> Unipole</label></li>
+          <li><input type="checkbox" id="wall-graphic"><label for="wall-graphic"> Wall graphic</label></li>
+          <li><input type="checkbox" id="wall-hoarding"><label for="wall-hoarding"> Wall Hoarding</label></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Sort</h3>
+        <select>
+          <option value="default">By</option>
+          <option value="low-to-high">Price: Low to High</option>
+          <option value="high-to-low">Price: High to Low</option>
+        </select>
+      </div>
+
+      <div class="sidebar-section">
+        <h3>Location</h3>
+        <select>
+          <option value="state">State</option>
+          <option value="chennai">Chennai</option>
+          <option value="kancheepuram">Kancheepuram</option>
+          <option value="madurai">Madurai</option>
+          <option value="trichy">Trichy</option>
+        </select>
+        <ul>
+          <li><input type="checkbox" id="chennai"><label for="chennai"> Chennai</label></li>
+          <li><input type="checkbox" id="kanyakumari"><label for="kanyakumari"> Kanyakumari</label></li>
+          <li><input type="checkbox" id="karaikudi"><label for="karaikudi"> Karaikudi</label></li>
+          <li><input type="checkbox" id="krishnagiri"><label for="krishnagiri"> Krishnagiri</label></li>
+          <li><input type="checkbox" id="madurai"><label for="madurai"> Madurai</label></li>
+          <li><input type="checkbox" id="mayiladuthurai"><label for="mayiladuthurai"> Mayiladuthurai</label></li>
+        </ul>
+      </div>
+    </aside>
+
+    <!-- Main Column -->
+    <div class="main-column">
+      <div class="image-grid">
+        <!-- Card Container -->
+        <div class="card-container">
+          {% for ad in ads|slice:":12" %}
+          <div class="card">
+            <div class="poster-line"></div>
+            <div class="image-wrapper">
+              <img src="{{ ad.image.url }}" alt="{{ ad.title }}" class="card-image">
+            </div>
+            <h3>{{ ad.title }}</h3>
+            <p>{{ ad.size }}</p>
+            <p>₹ {{ ad.price }}</p>
+            <p>{{ ad.Outdoormedium }}</p>
+            <button class="book-now-button" onclick="openPopup('{{ ad.title }}')">Book Now</button>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    
+      <!-- Pagination -->
+       <!-- Pagination -->
+      <div class="pagination">
+        <!-- Previous Button -->
+        {% if ads.has_previous %}
+        <a href="?page={{ ads.previous_page_number }}" class="pagination-button">Previous</a>
+        {% endif %}
+
+        <!-- Page Numbers -->
+        {% for num in ads.paginator.page_range %}
+        {% if num == ads.number %}
+        <span class="pagination-active">{{ num }}</span>
+        {% else %}
+        <a href="?page={{ num }}" class="pagination-button">{{ num }}</a>
+        {% endif %}
+        {% endfor %}
+
+        <!-- Next Button -->
+        {% if ads.has_next %}
+        <a href="?page={{ ads.next_page_number }}" class="pagination-button">Next</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+<!-- Popup Modal -->
+<!-- Popup Modal -->
+<div id="popupModal" class="popup-modal">
+  <div class="popup-content">
+      <span class="close-button" onclick="closePopup()">&times;</span>
+      <h2>Book Now</h2>
+      <form id="bookingForm">
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
+
+          <label for="email">Email:</label>
+          <input type="email" id="email" name="email" required>
+
+          <label for="phone">Phone Number:</label>
+          <input type="tel" id="phone" name="phone" required>
+
+          <label for="description">Description:</label>
+          <textarea id="description" name="description" rows="3"></textarea>
+
+          <label for="remarks">Remarks:</label>
+          <textarea id="remarks" name="remarks" rows="3"></textarea>
+
+          <button type="submit">Submit</button>
+      </form>
+  </div>
+</div>
+
+
+  <script>
+          function openPopup(adTitle) {
+            document.getElementById("popupModal").style.display = "block";
+            document.getElementById("bookingForm").reset();
+        }
+
+          function closePopup() {
+            document.getElementById("popupModal").style.display = "none";
+        }
+    
+
+  </script>
+  <!-- Footer -->
+  <div class="footer">
+    <div class="col-1">
+      <h3>Contacts</h3>
+      <div class="phone">
+        <a href="#"><i class="fa-solid fa-phone"></i> +91 1234567890</a>
+        <a href="#"><i class="fa-solid fa-phone"></i> +91 1234567890</a>
+      </div>
+      <div class="email">
+        <a href="mailto:vinothkumar@adinn.co.in">
+          <i class="fa-solid fa-envelope"></i> vinothkumar@adinn.co.in
+        </a>
+      </div>
+    </div>
+    <div class="col-2">
+      <forms>
+        <input type="email" placeholder="Enter your email" required>
+        <button type="submit">contact me</button>
+      </forms>
+    </div>
+    <div class="col-3">
+      <h3>Head Office</h3>
+      <p><i class="fa-solid fa-building"></i> No. 3, 1st Floor, Vijayalakshmi Street</p>
+      <p>Nungambakkam, Chennai, 600-134</p>
+      <h3>Branch Office</h3>
+      <p><i class="fa-solid fa-building"></i> No. 3, 1st Floor, Vijayalakshmi Street</p>
+      <p>Nungambakkam, Chennai, 600-134</p>
+    </div>
+  </div>
+  
+
+</body>
+</html>
